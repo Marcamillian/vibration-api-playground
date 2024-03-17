@@ -3,10 +3,15 @@ console.log("something")
 var buttonClicked = (event)=>{
   console.log("button Clicked")
 
+  const vibrationRate = document.querySelector(".vibration-rate").value
+
   if('vibrate' in navigator){
-    navigator.vibrate(200)
+    const vibrationSucess = navigator.vibrate(200)
+    console.log(`vibration rate: ${vibrationRate} - succeeded: ${vibrationSucess}`)
   }
 
 }
 
-document.querySelector("button").addEventListener("click", buttonClicked)
+document.querySelector(".vibrate-1").addEventListener("click", buttonClicked)
+
+document.querySelector(".vibrate-2").addEventListener("touchstart", buttonClicked)
