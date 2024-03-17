@@ -6,7 +6,7 @@ var buttonClicked = (event)=>{
   const vibrationRate = document.querySelector(".vibration-rate").value
 
   if('vibrate' in navigator){
-    const vibrationSucess = navigator.vibrate(200)
+    const vibrationSucess = navigator.vibrate(vibrationRate)
     console.log(`vibration rate: ${vibrationRate} - succeeded: ${vibrationSucess}`)
   }
 
