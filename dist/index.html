@@ -6,27 +6,20 @@
     <meta charset="utf-8">
     <meta name="theme-color" content="grey">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css" type="text/css">
   </head>
 
   <body>
+
     <div>
-      <div>
-        <label for=".vibration-rate">Vibration rate</label>
-        <input type="text" class="vibration-rate">
-      </div>
-      <button class="vibrate-1">onClick Vibrate</button>
-
+      <label for=".vibration-length">Vibration length (ms)</label>
+      <input type="text" class="vibration-length">
     </div>
 
-    <div style="padding-top:200px">
-      <div>
-        <label for=".vibration-rate-2">Vibration rate</label>
-        <input type="text" class="vibration-rate-2">
-      </div>
-      <button class="vibrate-2">touchStart Vibrate</button>
-
-      
-    </div>
+    <button class="vibrate-1">onClick Vibrate</button>
+    <button class="vibrate-2">touchStart Vibrate</button>
+    <button class="vibrate-3">Vibrate whilst down</button>
+    <p class="vibrate-display"></p>
   </body>
 
   <script src="index.js" type="module"></script>
