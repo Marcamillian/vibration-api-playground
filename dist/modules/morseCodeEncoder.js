@@ -6,7 +6,7 @@
  5. SEVEN UNITS - space between words
 */
 
-export class MorseCodeEncoder{
+export default class MorseCodeEncoder{
 
   static morseMap = {
     "A": ".-",

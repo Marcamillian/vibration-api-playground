@@ -2,18 +2,45 @@
 
 <html>
   <head>
-    <script type="module">
-
-      import {MorseCodeEncoder} from "/modules/morseCodeEncoder.js";
-
-      console.log(MorseCodeEncoder.textToMorse("Hello World"))
-    </script>
+    
   </head>
 
   <body>
     <h1> Something </h1>
+    <label for="morse-content">Morse Content</label>
+    <input id="morse-content" type="text"/>
+    <label for="morse-gap">Morse Gap</label>
+    <input id="morse-gap" type="number"/>
+
+    <button id="morse-vibration-trigger">Morse Vibration</button>
   </body>
 
-  <script>
+  <script type="module">
+
+    import MorseCodeEncoder from "../modules/morseCodeEncoder.js";
+
+    //console.log(MorseCodeEncoder.textToMorse("Hello World"))
+
+    const morseContentInput = document.querySelector(`#morse-content`)
+    const morseGapInput = document.querySelector(`#morse-gap`)
+
+    const morseTriggerButton = document.querySelector(`#morse-vibration-trigger`)
+
+    const handleVibrationTrigger = ()=>{
+
+      let textString = morseContentInput.value;
+      let morseGap = morseGapInput.value;
+
+      const morseString = MorseCodeEncoder.textToMorse(textString)
+      const timingArray = MorseCodeEncoder.morseStringToTimingArray(morseString, morseGap)
+
+      console.log(timingArray)
+
+      navigator.vibrate(timingArray)
+
+    }
+
+    morseTriggerButton.addEventListener(`click`, handleVibrationTrigger)
+     
   </script>
 </html>
