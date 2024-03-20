@@ -2,7 +2,10 @@
 
 <html>
   <head>
-    
+    <meta charset="utf-8">
+    <meta name="theme-color" content="grey">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="morseStyles.css" type="text/css">
   </head>
 
   <body>
@@ -13,11 +16,13 @@
     <input id="morse-gap" type="number"/>
 
     <button id="morse-vibration-trigger">Morse Vibration</button>
+    <button id="morse-vibration-trigger-alt">Morse Vibration Alt</button>
   </body>
 
   <script type="module">
 
     import MorseCodeEncoder from "../modules/morseCodeEncoder.js";
+    import TimingHelper from "../modules/timingHelper.js"
 
     //console.log(MorseCodeEncoder.textToMorse("Hello World"))
 
@@ -25,22 +30,44 @@
     const morseGapInput = document.querySelector(`#morse-gap`)
 
     const morseTriggerButton = document.querySelector(`#morse-vibration-trigger`)
+    const morseTriggerButtonAlt = document.querySelector(`#morse-vibration-trigger-alt`)
 
-    const handleVibrationTrigger = ()=>{
-
+    const getTimingArray = ()=>{
       let textString = morseContentInput.value;
       let morseGap = morseGapInput.value;
 
       const morseString = MorseCodeEncoder.textToMorse(textString)
       const timingArray = MorseCodeEncoder.morseStringToTimingArray(morseString, morseGap)
 
-      console.log(timingArray)
+      return timingArray
 
+    }
+    
+    const handleVibrationTrigger = ()=>{
+
+      let timingArray = getTimingArray()
       navigator.vibrate(timingArray)
+    }
 
+    const handleVibrationTriggerAlt = ()=>{
+      let timingArray = getTimingArray();
+
+      let startFunction = ()=>{
+        console.log(`di`, new Date())
+        navigator.vibrate(Infinity)
+      }
+      let stopFunction = ()=>{
+        console.log(`_`, new Date())
+        navigator.vibrate(0)
+      }
+
+      let timedFunction = TimingHelper.executeOnTiming(startFunction, stopFunction, timingArray)
+
+      timedFunction()
     }
 
     morseTriggerButton.addEventListener(`click`, handleVibrationTrigger)
+    morseTriggerButtonAlt.addEventListener(`click`, handleVibrationTriggerAlt)
      
   </script>
 </html>
