@@ -10,28 +10,47 @@ export default class TimingHelper{
   // return - a function that can be called to start vibrations
   static executeOnTiming = (startFunction, stopFunction,  timingArray)=>{
 
-    // using set interval
-
-    // start vibration 
-    // wait for a time - defined in the timing array
-      // call vibration next - need to know Infinity or 0
-      // repeat
+    const timelineArray = TimingHelper.timingArrayToTimeline(timingArray)
 
     return ()=>{
       let running = true
-      startFunction()
+      let timeline = 0
+      let timeoutIndexArray = []
 
-      timingArray.forEach(( timing, index )=>{
+      let timeoutIndex = startFunction()
 
-        if(running){ setInterval(stopFunction, timing) }
-        else{ setInterval(startFunction, timing )}
+      timelineArray.forEach(( timing, index )=>{
+
+        if(running){
+          let timeoutIndex = setTimeout(stopFunction, timing)
+          timeoutIndexArray.push(timeoutIndex)
+        }
+        else{ 
+          let timeoutIndex = setTimeout(startFunction, timing)
+          timeoutIndexArray.push(timeoutIndex)
+        }
         running = !running
 
       })
 
+      return timeoutIndexArray
     }
 
+  }
 
+  /* Change an array
+  */
+  static timingArrayToTimeline(timingArray){
+    
+    return timingArray.reduce((carry, timing)=>{
+      if (carry.length == 0){
+        carry.push(timing)
+      }else{
+        carry.push( timing + carry[carry.length-1] )
+      }
+
+      return carry
+    }, [])
   }
 
 }

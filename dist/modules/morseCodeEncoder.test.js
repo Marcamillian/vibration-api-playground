@@ -1,5 +1,5 @@
 import {test} from 'tap'
-import {MorseCodeEncoder} from './morseCodeEncoder.js';
+import MorseCodeEncoder from './morseCodeEncoder.js';
 
 test("Testing textToMorse()", (t)=>{
 

@@ -17,6 +17,7 @@
 
     <button id="morse-vibration-trigger">Morse Vibration</button>
     <button id="morse-vibration-trigger-alt">Morse Vibration Alt</button>
+    <button id="morse-vibration-trigger-alt-cancel">Morse Vibration Alt Cancel</button>
   </body>
 
   <script type="module">
@@ -31,6 +32,7 @@
 
     const morseTriggerButton = document.querySelector(`#morse-vibration-trigger`)
     const morseTriggerButtonAlt = document.querySelector(`#morse-vibration-trigger-alt`)
+    const morseTriggerAltCancelButton = document.querySelector("#morse-vibration-trigger-alt-cancel")
 
     const getTimingArray = ()=>{
       let textString = morseContentInput.value;
@@ -43,6 +45,12 @@
 
     }
     
+    const cancelTimeoutIndexes = (timeoutIndexArray)=>{
+      timeoutIndexArray.forEach((timeoutIndex)=>{
+        clearTimeout(timeoutIndex)
+      })
+    }
+
     const handleVibrationTrigger = ()=>{
 
       let timingArray = getTimingArray()
@@ -63,7 +71,12 @@
 
       let timedFunction = TimingHelper.executeOnTiming(startFunction, stopFunction, timingArray)
 
-      timedFunction()
+      let timeoutIndexArray = timedFunction()
+
+      morseTriggerAltCancelButton.addEventListener(`click`, ()=>{
+        cancelTimeoutIndexes(timeoutIndexArray)
+        console.log("cancelled timeouts", timeoutIndexArray)
+      })
     }
 
     morseTriggerButton.addEventListener(`click`, handleVibrationTrigger)
