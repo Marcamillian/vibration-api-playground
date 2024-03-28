@@ -10,3 +10,23 @@ button{
   margin: 20px;
   padding: 20px;
 }
+
+#morse-output-visual{
+  height:20vw;
+  min-height: 50px;
+  max-height: 500px;
+
+  width: 20vw;
+  min-height: 50px;
+  max-height: 500px;
+
+  margin: 20px;
+
+  border-radius: 100%;
+
+  background-color: lightgrey;
+}
+
+#morse-output-visual.high-signal{
+  background-color: gold
+}
