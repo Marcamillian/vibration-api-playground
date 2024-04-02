@@ -9,78 +9,24 @@
   </head>
 
   <body>
-    <h1> Something </h1>
-    <label for="morse-content">Morse Content</label>
-    <input id="morse-content" type="text"/>
-    <label for="morse-gap">Morse Gap</label>
-    <input id="morse-gap" type="number"/>
-
-    <button id="morse-vibration-trigger">Morse Vibration</button>
-    <button id="morse-vibration-trigger-alt">Morse Vibration Alt</button>
-    <button id="morse-vibration-trigger-alt-cancel">Morse Vibration Alt Cancel</button>
+    <h1> Morse Code Output </h1>
+    <p>
+      We've got 3 ways to convert words into morse code
+    </p>
+    <div>
+      <p>
+        <a href="./output/visual.html">[ Visual ]</a>
+        <span>A blinking visual element</span>
+      </p>
+      <p>
+        <a href="./output/sound.html">[ Sound ]</a>
+        <span>An audio tone</span>
+      </p>
+      <p>
+        <a href="./output/vibration.html">[ Vibration ]</a>
+        <span>Vibration on your device (if suppored)</span>
+      </p>
+    </div>
   </body>
 
-  <script type="module">
-
-    import MorseCodeEncoder from "../modules/morseCodeEncoder.js";
-    import TimingHelper from "../modules/timingHelper.js"
-
-    //console.log(MorseCodeEncoder.textToMorse("Hello World"))
-
-    const morseContentInput = document.querySelector(`#morse-content`)
-    const morseGapInput = document.querySelector(`#morse-gap`)
-
-    const morseTriggerButton = document.querySelector(`#morse-vibration-trigger`)
-    const morseTriggerButtonAlt = document.querySelector(`#morse-vibration-trigger-alt`)
-    const morseTriggerAltCancelButton = document.querySelector("#morse-vibration-trigger-alt-cancel")
-
-    const getTimingArray = ()=>{
-      let textString = morseContentInput.value;
-      let morseGap = morseGapInput.value;
-
-      const morseString = MorseCodeEncoder.textToMorse(textString)
-      const timingArray = MorseCodeEncoder.morseStringToTimingArray(morseString, morseGap)
-
-      return timingArray
-
-    }
-    
-    const cancelTimeoutIndexes = (timeoutIndexArray)=>{
-      timeoutIndexArray.forEach((timeoutIndex)=>{
-        clearTimeout(timeoutIndex)
-      })
-    }
-
-    const handleVibrationTrigger = ()=>{
-
-      let timingArray = getTimingArray()
-      navigator.vibrate(timingArray)
-    }
-
-    const handleVibrationTriggerAlt = ()=>{
-      let timingArray = getTimingArray();
-
-      let startFunction = ()=>{
-        console.log(`di`, new Date())
-        navigator.vibrate(Infinity)
-      }
-      let stopFunction = ()=>{
-        console.log(`_`, new Date())
-        navigator.vibrate(0)
-      }
-
-      let timedFunction = TimingHelper.executeOnTiming(startFunction, stopFunction, timingArray)
-
-      let timeoutIndexArray = timedFunction()
-
-      morseTriggerAltCancelButton.addEventListener(`click`, ()=>{
-        cancelTimeoutIndexes(timeoutIndexArray)
-        console.log("cancelled timeouts", timeoutIndexArray)
-      })
-    }
-
-    morseTriggerButton.addEventListener(`click`, handleVibrationTrigger)
-    morseTriggerButtonAlt.addEventListener(`click`, handleVibrationTriggerAlt)
-     
-  </script>
 </html>

@@ -5,41 +5,58 @@
 */
 export default class TimingHelper{
 
-  // Turn vibration timing array into a series of events
-  // arguments - timing array in ms
-  // return - a function that can be called to start vibrations
-  static executeOnTiming = (startFunction, stopFunction,  timingArray)=>{
+  /** Produces a function that can be called to trigger events on a given schedule
+   * @param {function}    signalOnFunc  user provided signal to indicate an on signal (dot/dash)
+   * @param {function}    signalOffFunc user provided function to indicate an off signal (gap between dot/dash/letter/word)
+   * @param {Int[]}       timingArray   an array of ms values describing when signal should be on/off e.g. [100, 200, 300, 400]  
+   * @returns {function}  a function that can be called to trigger the events (N.B - calling this function retuns a function that can cancel the events)
+   */
+  static executeOnTiming = (signalOnFunc, signalOffFunc,  timingArray)=>{
 
     const timelineArray = TimingHelper.timingArrayToTimeline(timingArray)
 
     return ()=>{
-      let running = true
-      let timeline = 0
-      let timeoutIndexArray = []
+      let timeoutIndexArray = [];
+      let running;                  // tracks alternating signalOn/signalOff calls
 
-      let timeoutIndex = startFunction()
+      signalOnFunc();  // turn the signal on
+      running = true;
 
-      timelineArray.forEach(( timing, index )=>{
+      // schedule alternating on/off events for the future using the timing array
+      timelineArray.forEach(( timing )=>{
 
         if(running){
-          let timeoutIndex = setTimeout(stopFunction, timing)
-          timeoutIndexArray.push(timeoutIndex)
+          let timeoutIndex = setTimeout(signalOffFunc, timing)
+          timeoutIndexArray.push(timeoutIndex)  // store the index of the scheduled call
         }
         else{ 
-          let timeoutIndex = setTimeout(startFunction, timing)
-          timeoutIndexArray.push(timeoutIndex)
+          let timeoutIndex = setTimeout(signalOnFunc, timing)
+          timeoutIndexArray.push(timeoutIndex)  // store the index of the scheduled call 
         }
-        running = !running
+        running = !running // flip to other signal state for next call
 
       })
 
-      return timeoutIndexArray
+      const cancelExecution = ()=>{
+        signalOffFunc();  // make sure signal is off
+  
+        timeoutIndexArray.forEach((timeoutIndex)=>{ // cancel each scheduled call by its index
+          clearTimeout(timeoutIndex)
+        })
+      }
+
+      return cancelExecution;
+  
     }
 
   }
 
-  /* Change an array
-  */
+  /** Turns an array of timing gaps into an array of timings from the start
+   * @param   {Int[]} timingArray 
+   * @returns null
+   * 
+   * e.g. [100,100,100] turns into [100,200,300]
+   */
   static timingArrayToTimeline(timingArray){
     
     return timingArray.reduce((carry, timing)=>{
